@@ -10,7 +10,6 @@ buffer : .byte 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0
 .section .text
 
 .macro push_caller_regs
-    push %eax
     push %ecx
     push %edx
 .endm
@@ -18,7 +17,6 @@ buffer : .byte 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0
 .macro pop_caller_regs
     pop %edx
     pop %ecx
-    pop %eax
 .endm
 
 .macro push_callee_regs
@@ -34,17 +32,18 @@ buffer : .byte 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0
 .endm
 
 
-
 .global open_file
 open_file:
     push %ebp
     mov %esp,%ebp
 
     sub $4,%esp
+    push_caller_regs
     push $flag
     push $file
     call fopen
     add $8,%esp
+    pop_caller_regs
     mov %eax,-4(%ebp)
 loop__:
     push -4(%ebp)
@@ -64,12 +63,17 @@ create_trie:
     push %ebp
     mov %esp,%ebp
 
+    push_caller_regs
     push $TRIE_STRUCT_SIZE
     push $1
     call calloc
-    sub $8,%esp
+    add $8,%esp
+    pop_caller_regs
+
     mov 8(%ebp),%ecx
-    mov %ecx,(%eax)
+    movb %cl,(%eax) 
+    mov 12(%ebp),%ecx
+    movb %cl,1(%eax) 
 
     mov %ebp,%esp
     pop %ebp
@@ -86,17 +90,36 @@ add_word:
 
 
 // params:
-//     trie* trie
-//     char lettre
-//     bool final
+//     trie* trie   ebp+8
+//     char lettre  ebp+12
+//     bool final   ebp+16
 .global add_child
 add_child:
     push %ebp
     mov %esp,%ebp
+
+    push_caller_regs
     push 8(%ebp)
-
-    
-
+    push 12(%ebp)
+    call get_child
+    add $8,%esp
+    pop_caller_regs
+    mov (%eax),%edx
+    or %edx,%edx
+    jz not_child//need to verify the following 4 lines
+    mov %edx,%eax
+    mov %ebp,%esp
+    pop %ebp
+    ret
+not_child:
+    mov %eax,%edx
+    push_caller_regs
+    push 16(%ebp)
+    push 12(%ebp)
+    call create_trie
+    add $8,%esp
+    pop_caller_regs
+    mov %eax,(%edx) 
     mov %ebp,%esp
     pop %ebp
     ret
@@ -114,7 +137,6 @@ get_child:
     mov 12(%ebp),%ecx
     sub $ASCII_A,%ecx
     add %ecx,%eax
-    mov (%eax),%eax
 
     mov %ebp,%esp
     pop %ebp

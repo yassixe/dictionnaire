@@ -8,11 +8,20 @@ void print_trie(trie* t){
     return;
 }
 
+void print(trie* t){
+    printf("lettre : %c\n",(uint_8)t->lettre);
+    for(int i=0; i<26; i++){
+        printf("%d,",t->children[i]!=NULL);
+    }
+    printf("\n");
+    printf("final : %d\n",t->is_final);
+}
+
 int main(void){
-    trie* t = create_trie((uint_8)'t');
-    t->children[0]=(trie*)4;
-    printf("is child %d\n",(unsigned)get_child(t,(uint_8)'a'));
-    open_file();
-    print_trie(t);
+    trie* t = create_trie((uint_8)'t',0);
+    add_child(t,'a',0);
+    print(t);
+    // open_file();
+    
     return 0;
 }

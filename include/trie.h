@@ -10,9 +10,9 @@ typedef struct trie{
     struct trie* children[26];
 }__attribute__((packed)) trie;
 
-trie* create_trie(uint_8 lettre);
-trie* get_child(trie* t, uint_8 lettre);
-
+trie* create_trie(uint_8 lettre, uint_8 final);
+trie** get_child(trie* t, uint_8 lettre);
+trie*  add_child(trie* t,uint_8 lettre, uint_8 final);
 //function to be removed
 void print_trie(trie* trie);
 void open_file(void);
