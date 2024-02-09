@@ -1,9 +1,13 @@
 .equ TRIE_STRUCT_SIZE, 106
+.equ ASCII_A, 97
 .extern calloc
 .section .note.GNU-stack
 
+.section .data
+file : .asciz "/home/kali/Desktop/test_struct/src/file.txt"
+flag : .asciz "r"
+buffer : .byte 0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0
 .section .text
-
 
 .macro push_caller_regs
     push %eax
@@ -29,6 +33,32 @@
     pop %ebx
 .endm
 
+
+
+.global open_file
+open_file:
+    push %ebp
+    mov %esp,%ebp
+
+    sub $4,%esp
+    push $flag
+    push $file
+    call fopen
+    add $8,%esp
+    mov %eax,-4(%ebp)
+loop__:
+    push -4(%ebp)
+    push $16
+    push $buffer
+    call fgets
+    //the word address is in %eax
+    //add it to the trie
+    //exit the loop when we are at the end of the dictionary
+    jmp loop__
+    mov %ebp,%esp
+    pop %ebp
+    ret
+
 .global create_trie
 create_trie:
     push %ebp
@@ -41,6 +71,44 @@ create_trie:
     mov 8(%ebp),%ecx
     mov %ecx,(%eax)
 
+    mov %ebp,%esp
+    pop %ebp
+    ret
+
+//params:
+//      -trie* root
+//      -char* word
+.global add_word
+add_word:
+    ret
+
+
+.global add_child
+add_child:
+    ret
+
+// params:
+//     char lettre
+//     trie* ptrie
+.global is_child
+is_child:
+    push %ebp
+    mov %esp,%ebp
+
+    mov 8(%ebp),%eax
+    add $2,%eax
+    mov 12(%ebp),%ecx
+    sub $ASCII_A,%ecx
+    add %ecx,%eax
+    mov (%eax),%eax
+    or %eax,%eax
+    jz not_child
+    mov $1,%eax
+    mov %ebp,%esp
+    pop %ebp
+    ret
+not_child:
+    mov $0,%eax
     mov %ebp,%esp
     pop %ebp
     ret

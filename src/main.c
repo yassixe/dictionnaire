@@ -9,7 +9,10 @@ void print_trie(trie* t){
 }
 
 int main(void){
-    trie* t = create_trie(65);
+    trie* t = create_trie((uint_8)'t');
+    t->children[1]=(trie*)4;
+    printf("is child %d\n",is_child(t,(uint_8)'a'));
+    open_file();
     print_trie(t);
     return 0;
 }
