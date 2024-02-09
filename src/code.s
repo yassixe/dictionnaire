@@ -83,15 +83,29 @@ add_word:
     ret
 
 
+
+
+// params:
+//     trie* trie
+//     char lettre
+//     bool final
 .global add_child
 add_child:
+    push %ebp
+    mov %esp,%ebp
+    push 8(%ebp)
+
+    
+
+    mov %ebp,%esp
+    pop %ebp
     ret
 
 // params:
 //     char lettre
 //     trie* ptrie
-.global is_child
-is_child:
+.global get_child
+get_child:
     push %ebp
     mov %esp,%ebp
 
@@ -101,14 +115,11 @@ is_child:
     sub $ASCII_A,%ecx
     add %ecx,%eax
     mov (%eax),%eax
-    or %eax,%eax
-    jz not_child
-    mov $1,%eax
+
     mov %ebp,%esp
     pop %ebp
     ret
-not_child:
-    mov $0,%eax
-    mov %ebp,%esp
-    pop %ebp
-    ret
+
+
+
+

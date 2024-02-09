@@ -11,7 +11,7 @@ typedef struct trie{
 }__attribute__((packed)) trie;
 
 trie* create_trie(uint_8 lettre);
-uint_8 is_child(trie* t, uint_8 lettre);
+trie* get_child(trie* t, uint_8 lettre);
 
 //function to be removed
 void print_trie(trie* trie);
