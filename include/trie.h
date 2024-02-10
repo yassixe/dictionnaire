@@ -14,7 +14,7 @@ trie* create_trie(uint_8 lettre, uint_8 final);
 trie** get_child(trie* t, uint_8 lettre);
 trie*  add_child(trie* t,uint_8 lettre, uint_8 final);
 void add_word(trie* t,char* word);
-//function to be removed
+//function to be removed;
 void print_trie(trie* trie);
 void open_file(void);
 #endif
