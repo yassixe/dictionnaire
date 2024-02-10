@@ -99,14 +99,14 @@ add_child:
     mov %esp,%ebp
 
     push_caller_regs
-    push 8(%ebp)
     push 12(%ebp)
+    push 8(%ebp)
     call get_child
     add $8,%esp
     pop_caller_regs
     mov (%eax),%edx
     or %edx,%edx
-    jz not_child//need to verify the following 4 lines
+    jz not_child 
     mov %edx,%eax
     mov %ebp,%esp
     pop %ebp
@@ -136,6 +136,7 @@ get_child:
     add $2,%eax
     mov 12(%ebp),%ecx
     sub $ASCII_A,%ecx
+    shl $2,%ecx
     add %ecx,%eax
 
     mov %ebp,%esp
