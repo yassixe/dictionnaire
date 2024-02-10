@@ -18,11 +18,12 @@ void print(trie* t){
 }
 
 int main(void){
-    trie* t = create_trie((uint_8)'t',0);
+    trie* t = create_trie((uint_8)'t',1);
     trie * p=add_child(t,'a',0);
     printf("p: %p\n",p);
-    p=add_child(t,'d',0);
+    p=add_child(t,'a',1);
     printf("p: %p",p);
+
     // open_file();
     
     return 0;

@@ -54,6 +54,7 @@ loop__:
     //add it to the trie
     //exit the loop when we are at the end of the dictionary
     jmp loop__
+end:
     mov %ebp,%esp
     pop %ebp
     ret
@@ -84,6 +85,24 @@ create_trie:
 //      -char* word
 .global add_word
 add_word:
+//     push %ebp
+//     mov %esp,%ebp
+
+//     mov 8(%ebp),%eax
+//     mov 12(%ebp),%ecx
+//     mov (%ecx),%ecx
+//     or %ecx,%ecx
+//     jz done
+//     push %ecx
+//     push %eax
+
+//     call add_child
+//     jmp
+        
+// done:
+//     mov %ebp,%esp
+//     pop %ebp
+//     ret
     ret
 
 
@@ -108,6 +127,8 @@ add_child:
     or %edx,%edx
     jz not_child 
     mov %edx,%eax
+    movb 16(%ebp),%cl
+    movb %cl,1(%eax)
     mov %ebp,%esp
     pop %ebp
     ret
