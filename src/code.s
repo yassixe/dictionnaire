@@ -80,29 +80,44 @@ create_trie:
     pop %ebp
     ret
 
+
+
 //params:
-//      -trie* root
-//      -char* word
+//      trie ebp+8
+//      word ebp+12
 .global add_word
 add_word:
-//     push %ebp
-//     mov %esp,%ebp
+    push %ebp
+    mov %esp,%ebp
+    push_callee_regs
 
-//     mov 8(%ebp),%eax
-//     mov 12(%ebp),%ecx
-//     mov (%ecx),%ecx
-//     or %ecx,%ecx
-//     jz done
-//     push %ecx
-//     push %eax
+    mov 8(%ebp),%eax
+    mov 12(%ebp),%edx
+    xor %ecx,%ecx
+    movzbl (%edx), %ecx
+back:
 
-//     call add_child
-//     jmp
-        
-// done:
-//     mov %ebp,%esp
-//     pop %ebp
-//     ret
+    push %edx
+
+    push $0
+    push %ecx
+    push %eax
+    call add_child
+    add $12,%esp
+    pop %edx
+    xor %ecx,%ecx
+    inc %edx
+    movzbl (%edx),%ecx
+    orb %cl,%cl
+    jz last_char
+    jmp back
+
+last_char:
+    movb $1,1(%eax)
+
+    pop_callee_regs
+    mov %ebp,%esp
+    pop %ebp
     ret
 
 
